@@ -27,13 +27,10 @@ homepage = "https://github.com/pistondevelopers/gfx_texture"
 name = "gfx_texture"
 path = "src/lib.rs"
 
-[dependencies.image]
+[dependencies]
 
-git = "https://github.com/PistonDevelopers/image"
-
-[dependencies.piston-texture]
-
-git = "https://github.com/PistonDevelopers/texture"
+image = "~0.2.0"
+piston-texture = "0.0.0"
 
 [dependencies.gfx]
 
