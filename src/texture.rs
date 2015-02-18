@@ -9,17 +9,17 @@ use texture_lib::ImageSize;
 
 /// Represents a texture.
 #[derive(Copy)]
-pub struct Texture {
+pub struct Texture<R: gfx::Resources> {
     /// A handle to the Gfx texture.
-    pub handle: gfx::TextureHandle,
+    pub handle: gfx::TextureHandle<R>,
 }
 
-impl Texture {
+impl<R: gfx::Resources> Texture<R> {
     /// Creates a texture from path.
     pub fn from_path<D: gfx::Device>(
         device: &mut D,
         path: &Path
-    ) -> Result<Texture, String> {
+    ) -> Result<Texture<<D as gfx::Device>::Resources>, String> {
         let img = match image::open(path) {
             Ok(img) => img,
             Err(e)  => return Err(format!("Could not load '{:?}': {:?}",
@@ -55,7 +55,7 @@ impl Texture {
     pub fn from_image<D: gfx::Device>(
         device: &mut D,
         image: &RgbaImage
-    ) -> Texture {
+    ) -> Texture<<D as gfx::Device>::Resources> {
         let (width, height) = image.dimensions();
         let texture_info = gfx::tex::TextureInfo {
             width: width as u16,
@@ -80,7 +80,7 @@ impl Texture {
     pub fn from_rgba8<D: gfx::Device>(
         img: RgbaImage,
         d: &mut D
-    ) -> Texture {
+    ) -> Texture<<D as gfx::Device>::Resources> {
         let (width, height) = img.dimensions();
 
         let mut ti = gfx::tex::TextureInfo::new();
@@ -105,7 +105,7 @@ impl Texture {
         buffer: &[u8],
         width: u32,
         height: u32,
-    ) -> Texture {
+    ) -> Texture<<D as gfx::Device>::Resources> {
         use std::cmp::max;
 
         let width = max(width, 1);
@@ -168,7 +168,7 @@ impl Texture {
     }
 }
 
-impl ImageSize for Texture {
+impl<R: gfx::Resources> ImageSize for Texture<R> {
     #[inline(always)]
     fn get_size(&self) -> (u32, u32) {
         let info = self.handle.get_info();
