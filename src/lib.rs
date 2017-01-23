@@ -24,6 +24,8 @@ pub enum Flip {
     None,
     /// Flips image vertically.
     Vertical,
+    /// Flpips image horizontally.
+    Horizonal,
 }
 
 /// Represents a texture.
@@ -64,6 +66,8 @@ impl<R: gfx::Resources> Texture<R> {
 
         let img = if flip == Flip::Vertical {
             image::imageops::flip_vertical(&img)
+        } else if flip == Flip::Horizontal {
+            image::imageops::flip_horizontal(&img)
         } else {
             img
         };
