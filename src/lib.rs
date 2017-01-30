@@ -26,6 +26,8 @@ pub enum Flip {
     Vertical,
     /// Flips image horizontally.
     Horizontal,
+    /// Flips image both vertically and horizontally.
+    Both,
 }
 
 /// Represents a texture.
@@ -64,12 +66,14 @@ impl<R: gfx::Resources> Texture<R> {
             img => img.to_rgba()
         };
 
-        let img = if flip == Flip::Vertical {
-            image::imageops::flip_vertical(&img)
-        } else if flip == Flip::Horizontal {
-            image::imageops::flip_horizontal(&img)
-        } else {
-            img
+        let img = match flip {
+            Flip::Vertical => image::imageops::flip_vertical(&img),
+            Flip::Horizontal => image::imageops::flip_horizontal(&img),
+            Flip::Both => {
+                let img = image::imageops::flip_vertical(&img);
+                image::imageops::flip_horizontal(&img)
+            }
+            Flip::None => img,
         };
 
         Texture::from_image(factory, &img, settings).map_err(
