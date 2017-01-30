@@ -25,7 +25,7 @@ pub enum Flip {
     /// Flips image vertically.
     Vertical,
     /// Flips image horizontally.
-    Horizonal,
+    Horizontal,
 }
 
 /// Represents a texture.
