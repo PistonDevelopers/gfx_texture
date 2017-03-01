@@ -31,6 +31,7 @@ pub enum Flip {
 }
 
 /// Represents a texture.
+#[derive(Clone, Debug, PartialEq)]
 pub struct Texture<R> where R: gfx::Resources {
     /// Pixel storage for texture.
     pub surface: gfx::handle::Texture<R, R8_G8_B8_A8>,
