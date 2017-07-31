@@ -1,7 +1,7 @@
 [package]
 
 name = "piston-gfx_texture"
-version = "0.25.0"
+version = "0.26.0"
 authors = [
     "bvssvni <bvssvni@gmail.com>",
     "Coeuvre <coeuvre@gmail.com>",
@@ -21,6 +21,7 @@ license = "MIT"
 readme = "README.md"
 repository = "https://github.com/pistondevelopers/gfx_texture.git"
 homepage = "https://github.com/pistondevelopers/gfx_texture"
+documentation = "https://docs.rs/piston-gfx_texture"
 
 [lib]
 
@@ -30,5 +31,5 @@ path = "src/lib.rs"
 [dependencies]
 gfx = "0.16.0"
 gfx_core = "0.7.0"
-image = "0.14.0"
+image = "0.15.0"
 piston-texture = "0.5.0"
