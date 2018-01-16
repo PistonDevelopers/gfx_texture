@@ -155,8 +155,9 @@ impl<F, R> CreateTexture<F> for Texture<R>
                   T: gfx::format::TextureFormat
         {
             use gfx::{format, texture};
-            use gfx::memory::{Usage, SHADER_RESOURCE};
+            use gfx::memory::{Usage, Bind};
             use gfx_core::memory::Typed;
+            use gfx_core::texture::Mipmap;
 
             let surface = <T::Surface as format::SurfaceTyped>::get_surface_type();
             let num_slices = kind.get_num_slices().unwrap_or(1) as usize;
@@ -165,11 +166,11 @@ impl<F, R> CreateTexture<F> for Texture<R>
                 kind: kind,
                 levels: (data.len() / (num_slices * num_faces)) as texture::Level,
                 format: surface,
-                bind: SHADER_RESOURCE,
+                bind: Bind::SHADER_RESOURCE,
                 usage: Usage::Dynamic,
             };
             let cty = <T::Channel as format::ChannelTyped>::get_channel_type();
-            let raw = try!(factory.create_texture_raw(desc, Some(cty), Some(data)));
+            let raw = try!(factory.create_texture_raw(desc, Some(cty), Some((data, Mipmap::Provided))));
             let levels = (0, raw.get_info().levels - 1);
             let tex = Typed::new(raw);
             let view = try!(factory.view_texture_as_shader_resource::<T>(
