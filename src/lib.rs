@@ -18,7 +18,7 @@ use gfx::CombinedError;
 use gfx::format::{Srgba8, R8_G8_B8_A8};
 
 /// Flip settings.
-#[derive(Clone, Copy, PartialEq, Eq)]
+#[derive(Clone, Copy, PartialEq, Eq, Hash, Debug)]
 pub enum Flip {
     /// Does not flip.
     None,
