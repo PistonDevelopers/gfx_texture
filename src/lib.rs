@@ -184,13 +184,15 @@ impl<R: gfx::Resources> Texture<R> {
     }
 }
 
+impl<F, R> TextureOp<F> for Texture<R> where R: gfx::Resources {
+    type Error = Error;
+}
+
 impl<F, R, C> CreateTexture<TextureContext<F, R, C>> for Texture<R>
     where F: gfx::Factory<R>,
           R: gfx::Resources,
           C: gfx::CommandBuffer<R>,
 {
-    type Error = Error;
-
     fn create<S: Into<[u32; 2]>>(
         context: &mut TextureContext<F, R, C>,
         _format: Format,
@@ -265,8 +267,6 @@ impl<F, R, C> UpdateTexture<TextureContext<F, R, C>> for Texture<R>
           R: gfx::Resources,
           C: gfx::CommandBuffer<R>
 {
-    type Error = Error;
-
     fn update<O, S>(
         &mut self,
         context: &mut TextureContext<F, R, C>,
