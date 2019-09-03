@@ -250,14 +250,14 @@ impl<F, R, C> CreateTexture<TextureContext<F, R, C>> for Texture<R>
             texture::Filter::Linear => gfx::texture::FilterMethod::Bilinear,
         };
 
-        let wrap_mode_s = match settings.get_wrap_s() {
+        let wrap_mode_u = match settings.get_wrap_u() {
             Wrap::ClampToEdge => gfx::texture::WrapMode::Clamp,
             Wrap::ClampToBorder => gfx::texture::WrapMode::Border,
             Wrap::Repeat => gfx::texture::WrapMode::Tile,
             Wrap::MirroredRepeat => gfx::texture::WrapMode::Mirror,
         };
 
-        let wrap_mode_t = match settings.get_wrap_t() {
+        let wrap_mode_v = match settings.get_wrap_v() {
             Wrap::ClampToEdge => gfx::texture::WrapMode::Clamp,
             Wrap::ClampToBorder => gfx::texture::WrapMode::Border,
             Wrap::Repeat => gfx::texture::WrapMode::Tile,
@@ -266,9 +266,9 @@ impl<F, R, C> CreateTexture<TextureContext<F, R, C>> for Texture<R>
 
         let mut sampler_info = gfx::texture::SamplerInfo::new(
             filter_method,
-            wrap_mode_s
+            wrap_mode_u
         );
-        sampler_info.wrap_mode.1 = wrap_mode_t;
+        sampler_info.wrap_mode.1 = wrap_mode_v;
         sampler_info.border = settings.get_border_color().into();
 
         let (surface, view) = try!(create_texture::<Srgba8, F, R>(
