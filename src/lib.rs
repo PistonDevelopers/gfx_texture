@@ -249,10 +249,27 @@ impl<F, R, C> CreateTexture<TextureContext<F, R, C>> for Texture<R>
             texture::Filter::Nearest => gfx::texture::FilterMethod::Scale,
             texture::Filter::Linear => gfx::texture::FilterMethod::Bilinear,
         };
-        let sampler_info = gfx::texture::SamplerInfo::new(
+
+        let wrap_mode_u = match settings.get_wrap_u() {
+            Wrap::ClampToEdge => gfx::texture::WrapMode::Clamp,
+            Wrap::ClampToBorder => gfx::texture::WrapMode::Border,
+            Wrap::Repeat => gfx::texture::WrapMode::Tile,
+            Wrap::MirroredRepeat => gfx::texture::WrapMode::Mirror,
+        };
+
+        let wrap_mode_v = match settings.get_wrap_v() {
+            Wrap::ClampToEdge => gfx::texture::WrapMode::Clamp,
+            Wrap::ClampToBorder => gfx::texture::WrapMode::Border,
+            Wrap::Repeat => gfx::texture::WrapMode::Tile,
+            Wrap::MirroredRepeat => gfx::texture::WrapMode::Mirror,
+        };
+
+        let mut sampler_info = gfx::texture::SamplerInfo::new(
             filter_method,
-            gfx::texture::WrapMode::Clamp
+            wrap_mode_u
         );
+        sampler_info.wrap_mode.1 = wrap_mode_v;
+        sampler_info.border = settings.get_border_color().into();
 
         let (surface, view) = try!(create_texture::<Srgba8, F, R>(
             factory, tex_kind, &[memory])
