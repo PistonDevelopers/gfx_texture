@@ -113,7 +113,7 @@ impl<R: gfx::Resources> Texture<R> {
               C: gfx::CommandBuffer<R>,
               P: AsRef<Path>
     {
-        let img = try!(image::open(path).map_err(|e| e.to_string()));
+        let img = image::open(path).map_err(|e| e.to_string())?;
 
         let img = match img {
             DynamicImage::ImageRgba8(img) => img,
@@ -230,12 +230,11 @@ impl<F, R, C> CreateTexture<TextureContext<F, R, C>> for Texture<R>
                 usage: Usage::Dynamic,
             };
             let cty = <T::Channel as format::ChannelTyped>::get_channel_type();
-            let raw = try!(factory.create_texture_raw(desc, Some(cty), Some((data, Mipmap::Provided))));
+            let raw = factory.create_texture_raw(desc, Some(cty), Some((data, Mipmap::Provided)))?;
             let levels = (0, raw.get_info().levels - 1);
             let tex = Typed::new(raw);
-            let view = try!(factory.view_texture_as_shader_resource::<T>(
-                &tex, levels, format::Swizzle::new()
-            ));
+            let view = factory.view_texture_as_shader_resource::<T>(
+                &tex, levels, format::Swizzle::new())?;
             Ok((tex, view))
         }
 
@@ -271,9 +270,8 @@ impl<F, R, C> CreateTexture<TextureContext<F, R, C>> for Texture<R>
         sampler_info.wrap_mode.1 = wrap_mode_v;
         sampler_info.border = settings.get_border_color().into();
 
-        let (surface, view) = try!(create_texture::<Srgba8, F, R>(
-            factory, tex_kind, &[memory])
-        );
+        let (surface, view) = create_texture::<Srgba8, F, R>(
+            factory, tex_kind, &[memory])?;
         let sampler = factory.create_sampler(sampler_info);
         Ok(Texture { surface: surface, sampler: sampler, view: view })
     }
