@@ -117,7 +117,7 @@ impl<R: gfx::Resources> Texture<R> {
 
         let img = match img {
             DynamicImage::ImageRgba8(img) => img,
-            img => img.to_rgba()
+            img => img.to_rgba8()
         };
 
         let img = match flip {
