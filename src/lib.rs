@@ -108,7 +108,7 @@ impl<R: gfx::Resources> Texture<R> {
         path: P,
         flip: Flip,
         settings: &TextureSettings,
-    ) -> Result<Self, String>
+    ) -> Result<Self, Error>
         where F: gfx::Factory<R>,
               C: gfx::CommandBuffer<R>,
               P: AsRef<Path>
@@ -130,8 +130,7 @@ impl<R: gfx::Resources> Texture<R> {
             Flip::None => img,
         };
 
-        Texture::from_image(context, &img, settings).map_err(
-            |e| format!("{:?}", e))
+        Texture::from_image(context, &img, settings)
     }
 
     /// Creates a texture from image.
