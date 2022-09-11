@@ -12,6 +12,7 @@ pub use texture::*;
 use std::path::Path;
 use image::{
     DynamicImage,
+    ImageError,
     RgbaImage,
 };
 use gfx::format::{Srgba8, R8_G8_B8_A8};
@@ -35,6 +36,8 @@ pub enum Error {
     Create(gfx::CombinedError),
     /// An error when updating texture.
     Update(gfx::UpdateError<[u16; 3]>),
+    /// An error when performing an image operation.
+    Image(String),
 }
 
 impl From<gfx::UpdateError<[u16; 3]>> for Error {
@@ -46,6 +49,12 @@ impl From<gfx::UpdateError<[u16; 3]>> for Error {
 impl From<gfx::texture::CreationError> for Error {
     fn from(val: gfx::texture::CreationError) -> Error {
         Error::Create(val.into())
+    }
+}
+
+impl From<ImageError> for Error {
+    fn from(val: ImageError) -> Error {
+        Error::Image(val.to_string())
     }
 }
 
@@ -62,6 +71,7 @@ impl std::fmt::Display for Error {
         match *self {
             Error::Create(ref err) => Display::fmt(err, w),
             Error::Update(ref err) => Debug::fmt(err, w),
+            Error::Image(ref err) => Display::fmt(err, w),
         }
     }
 }
@@ -113,7 +123,7 @@ impl<R: gfx::Resources> Texture<R> {
               C: gfx::CommandBuffer<R>,
               P: AsRef<Path>
     {
-        let img = image::open(path).map_err(|e| e.to_string())?;
+        let img = image::open(path)?;
 
         let img = match img {
             DynamicImage::ImageRgba8(img) => img,
